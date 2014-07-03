@@ -1,0 +1,18 @@
+{
+  "name": "angular-polymer-pubsub",
+  "version": "0.0.0",
+  "description": "angular-polymer-pubsub",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sgudjonsson/angular-polymer-pubsub.git"
+  },
+  "author": "Sigurbjörn Guðjónsson <sigurbjorn.gudjonsson@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sgudjonsson/angular-polymer-pubsub/issues"
+  },
+  "homepage": "https://github.com/sgudjonsson/angular-polymer-pubsub",
+  "dependencies": {
+    "express": "~4.4.5"
+  }
+}

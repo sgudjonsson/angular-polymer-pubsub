@@ -1,0 +1,74 @@
+<link rel="import" href="/vendors/polymer/polymer.html">
+<link rel="import" href="/vendors/core-ajax/core-ajax.html">
+
+<polymer-element name="x-login" attributes="username">
+    <template>
+        <link rel="stylesheet" href="/vendors/semantic-ui/build/minified/collections/grid.min.css" />
+        <link rel="stylesheet" href="/vendors/semantic-ui/build/minified/collections/form.min.css" />
+        <link rel="stylesheet" href="/vendors/semantic-ui/build/minified/elements/button.min.css" />
+        <link rel="stylesheet" href="/vendors/semantic-ui/build/minified/elements/segment.min.css" />
+
+        <core-ajax id="ajaxLogin" url="/api/login" on-core-response="{{handleAuthorization}}" method="post" contentType="application/json" handleAs="json"></core-ajax>
+        <core-ajax id="ajaxLogout" url="/api/logout" on-core-response="{{handleAuthorization}}" method="post" contentType="application/json" handleAs="json"></core-ajax>
+
+        <div class="ui fluid form segment">
+            <template if="{{!isAuthorized}}">
+                <h3>Login component</h3>
+                <div class="field">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" value="{{username}}" />
+                </div>
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" value="{{password}}" />
+                </div>
+
+                <button class="ui blue submit button" on-click="{{onLogin}}">Login</button>
+            </template>
+            <template if="{{isAuthorized}}">
+                <h3>Logout component</h3>
+                <button class="ui red submit button" on-click="{{onLogout}}">Logout</button>
+            </template>
+        </div>
+    </template>
+    <script>
+        (function() {
+
+            Polymer('x-login', {
+                username: 'john',
+                password: 'smith',
+                isAuthorized: false,
+                ready: function() {
+                    var self = this;
+                    PubSub.subscribe('user-authorized', function(msg, data) {
+                        if(data.hasOwnProperty('isAuthorized'))
+                            self.isAuthorized = data.isAuthorized;
+                    })
+                },
+                onLogout: function() {
+                    var xhr = this.$.ajaxLogout;
+
+                    xhr.body = JSON.stringify({
+                        username: this.username
+                    });
+
+                    xhr.go();
+                },
+                onLogin: function() {
+                    var xhr = this.$.ajaxLogin;
+                    
+                    xhr.body = JSON.stringify({
+                        username: this.username,
+                        password: this.password
+                    });
+
+                    xhr.go();
+                },
+                handleAuthorization: function(e) {
+                    this.isAuthorized = e.detail.response.isAuthorized;
+                    PubSub.publish('user-authorized', { isAuthorized: this.isAuthorized });
+                }
+            })  
+        })();
+    </script>
+</polymer-element>
