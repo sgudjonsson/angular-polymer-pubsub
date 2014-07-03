@@ -1,7 +1,7 @@
 angular
     .module('app', [])
     .value('PubSub', PubSub)
-    .service('pubsub', ['$rootScope','PubSub', function($rootScope, PubSub) {
+    .service('pubsub', ['PubSub', function(PubSub) {
         this.subscribe = function(topic, callback) {
             PubSub.subscribe(topic, callback)
         };
@@ -11,15 +11,15 @@ angular
         }
     }])
     .controller('AppController', ['$scope', 'pubsub', function($scope, pubsub) {
-        $scope.isAuthorized = false;
+        $scope.isAuthenticated = false;
 
-        $scope.toggleAuthorized = function() {
-            pubsub.publish('user-authorized', { isAuthorized: !$scope.isAuthorized });
+        $scope.toggleAuthenticated = function() {
+            pubsub.publish('user-authenticated', { isAuthenticated: !$scope.isAuthenticated });
         }
 
-        pubsub.subscribe('user-authorized', function(msg, data) {
+        pubsub.subscribe('user-authenticated', function(msg, data) {
             $scope.$apply(function() {
-                $scope.isAuthorized = data.isAuthorized;
+                $scope.isAuthenticated = data.isAuthenticated;
             })
         });
     }])

@@ -1,0 +1,37 @@
+<link rel="import" href="/vendors/polymer/polymer.html">
+<link rel="import" href="/vendors/core-ajax/core-ajax.html">
+
+<polymer-element name="x-authentication">
+    <template>
+        <core-ajax id="ajaxLogin" url="/api/login" on-core-response="{{handleAuthentication}}" method="post" contentType="application/json" handleAs="json"></core-ajax>
+        <core-ajax id="ajaxLogout" url="/api/logout" on-core-response="{{handleAuthentication}}" method="post" contentType="application/json" handleAs="json"></core-ajax>
+    </template>
+    <script>
+        Polymer('x-authentication', {
+            logout: function() {
+                var xhr = this.$.ajaxLogout;
+
+                xhr.body = JSON.stringify({
+                    username: this.username
+                });
+
+                xhr.go();
+            },
+            login: function(username, password) {
+                var xhr = this.$.ajaxLogin;
+                
+                xhr.body = JSON.stringify({
+                    username: username,
+                    password: password
+                });
+
+                xhr.go();
+            },
+            handleAuthentication: function(e) {
+                var results = { isAuthenticated: e.detail.response.isAuthenticated };
+                PubSub.publish('user-authenticated', results);
+                this.fire("authentication", results);
+            }
+        });
+    </script>
+</polymer-element>
