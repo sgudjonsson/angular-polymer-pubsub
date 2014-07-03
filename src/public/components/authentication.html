@@ -8,6 +8,12 @@
     </template>
     <script>
         Polymer('x-authentication', {
+            ready: function() {
+                var self = this;
+                PubSub.subscribe('user-authenticated', function(msg, data) {
+                    self.triggerAuthentication(data.isAuthenticated);
+                });
+            },
             logout: function() {
                 var xhr = this.$.ajaxLogout;
 
@@ -30,7 +36,10 @@
             handleAuthentication: function(e) {
                 var results = { isAuthenticated: e.detail.response.isAuthenticated };
                 PubSub.publish('user-authenticated', results);
-                this.fire("authentication", results);
+                this.triggerAuthentication(results.isAuthenticated);
+            },
+            triggerAuthentication: function(isAuthenticated) {
+                this.fire("authentication", { isAuthenticated: isAuthenticated });
             }
         });
     </script>
