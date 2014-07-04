@@ -1,18 +1,22 @@
 <link rel="import" href="/vendors/polymer/polymer.html">
-<link rel="import" href="/vendors/core-ajax/core-ajax.html">
+<link rel="import" href="ajax.html">
+<link rel="import" href="pubsub.html">
 
-<polymer-element name="x-authentication">
+<polymer-element name="x-authentication" attributes="authenticated">
     <template>
-        <core-ajax id="ajaxLogin" url="/api/login" on-core-response="{{handleAuthentication}}" method="post" contentType="application/json" handleAs="json"></core-ajax>
-        <core-ajax id="ajaxLogout" url="/api/logout" on-core-response="{{handleAuthentication}}" method="post" contentType="application/json" handleAs="json"></core-ajax>
+        <x-ajax id="ajaxLogin" url="/api/login" on-core-response="{{_handleAuthentication}}" method="post" contentType="application/json" handleAs="json"></core-ajax>
+        <x-ajax id="ajaxLogout" url="/api/logout" on-core-response="{{_handleAuthentication}}" method="post" contentType="application/json" handleAs="json"></core-ajax>
+        <x-pubsub id="pubsub" topics="user-authenticated" on-topic="{{_handleMessage}}"></x-pubsub>
     </template>
     <script>
         Polymer('x-authentication', {
+            publish: {
+                authenticated: {
+                    value: false,
+                    reflect: true
+                }
+            },
             ready: function() {
-                var self = this;
-                PubSub.subscribe('user-authenticated', function(msg, data) {
-                    self.triggerAuthentication(data.isAuthenticated);
-                });
             },
             logout: function() {
                 var xhr = this.$.ajaxLogout;
@@ -33,13 +37,13 @@
 
                 xhr.go();
             },
-            handleAuthentication: function(e) {
-                var results = { isAuthenticated: e.detail.response.isAuthenticated };
-                PubSub.publish('user-authenticated', results);
-                this.triggerAuthentication(results.isAuthenticated);
+            _handleMessage: function(e) {
+                this.authenticated = e.detail.data.isAuthenticated
+                //this.fire('authenticated', { isAuthenticated: e.detail.data.isAuthenticated });
             },
-            triggerAuthentication: function(isAuthenticated) {
-                this.fire("authentication", { isAuthenticated: isAuthenticated });
+            _handleAuthentication: function(e) {
+                var data = { isAuthenticated: e.detail.response.isAuthenticated };
+                this.$.pubsub.publish('user-authenticated', data)
             }
         });
     </script>

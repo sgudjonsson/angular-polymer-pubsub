@@ -1,6 +1,6 @@
 angular
     .module('app', [])
-    .value('PubSub', PubSub)
+    .value('PubSub', window.PubSub)
     .service('pubsub', ['PubSub', function(PubSub) {
         this.subscribe = function(topic, callback) {
             PubSub.subscribe(topic, callback)
@@ -12,6 +12,7 @@ angular
     }])
     .controller('AppController', ['$scope', 'pubsub', function($scope, pubsub) {
         $scope.isAuthenticated = false;
+        $scope.username = 'john';
 
         $scope.toggleAuthenticated = function() {
             pubsub.publish('user-authenticated', { isAuthenticated: !$scope.isAuthenticated });

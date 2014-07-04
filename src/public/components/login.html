@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="/vendors/semantic-ui/build/minified/collections/form.min.css" />
         <link rel="stylesheet" href="/vendors/semantic-ui/build/minified/elements/button.min.css" />
         <link rel="stylesheet" href="/vendors/semantic-ui/build/minified/elements/segment.min.css" />
-        <x-authentication id="authentication" on-authentication="{{onAuthentication}}"></x-authentication>
+        <x-authentication id="authentication" authenticated="{{isAuthenticated}}"></x-authentication>
 
         <div class="ui fluid form segment">
 
@@ -36,8 +36,12 @@
     <script>
         (function() {
             Polymer('x-login', {
-                username: 'john',
-                password: 'smith',
+                publish: {
+                    username: {
+                        value: '',
+                        reflect: true
+                    }
+                },
                 isAuthenticated: false,
                 onLogout: function() {
                     var x = this.$.authentication;
@@ -46,9 +50,6 @@
                 onLogin: function() {
                     var x = this.$.authentication;
                     x.login(this.username, this.password);
-                },
-                onAuthentication: function(e) {
-                    this.isAuthenticated = e.detail.isAuthenticated
                 }
             })  
         })();

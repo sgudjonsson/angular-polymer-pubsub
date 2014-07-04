@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="app">
     <head>
         <title>Angular + Polymer + PubSub</title>
         <meta charset="utf-8" />
@@ -18,18 +18,24 @@
 
         <!-- Polymer components -->
         <link href="/components/login.html" rel="import" />
+        <link href="/components/link.html" rel="import" />
 
     </head>
-    <body>
-        <div class="ui three column grid">
-            <div class="column"></div>
-            <div class="six wide column">
-                <div class="ui form segment" ng-app="app" ng-controller="AppController">
-                    <h3>Angular says...</h3>
-                    <a class="ui green label" ng-show="isAuthenticated" ng-click="toggleAuthenticated()">User is authenticated</a>
-                    <a class="ui black label" ng-show="!isAuthenticated" ng-click="toggleAuthenticated()">User is not authenticated</a>
+    <body ng-controller="AppController">
+        <div class="ui grid">
+            <div class="column">
+                <div class="ui form segment">
+                    <h3>Angular says...
+                        <a class="ui green label" ng-show="isAuthenticated" ng-click="toggleAuthenticated()">User is authenticated</a>
+                        <a class="ui black label" ng-show="!isAuthenticated" ng-click="toggleAuthenticated()">User is not authenticated</a>
+                    </h3>
+                    <div class="field">
+                        <label for="foo">Username</label>
+                        <input type="text" name="foo" id="foo" ng-model="username" />
+                    </div>
                 </div>
-                <x-login></x-login>
+                <x-login username="{{username}}"></x-login>
+                <x-link href="/api" text="Click me!"></x-link>
                 <div class="ui form segment">
                     <h3>The page says ...</h3>
                     <pre id="log"></pre>
@@ -41,7 +47,6 @@
                     </script>
                 </div>
             </div>
-            <div class="column"></div>
         </div>
     </body>
 </html>

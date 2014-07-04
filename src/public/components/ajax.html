@@ -1,0 +1,36 @@
+<link rel="import" href="/vendors/polymer/polymer.html" />
+<link rel="import" href="/vendors/core-ajax/core-ajax.html" />
+
+<polymer-element name="x-ajax" extends="core-ajax">
+    <script>
+        Polymer('x-ajax', {
+            go: function() {
+                this.super();
+            },
+
+            receive: function() {
+                console.log('receive begin');
+                this.super(arguments);
+                console.log('receive end');
+            },
+
+            processResponse: function() {
+                console.log('processResponse begin');
+                this.super(arguments);
+                console.log('processResponse end');
+            },
+
+            error: function() {
+                console.log('error begin');
+                this.super(arguments);
+                console.log('error end');
+            },
+
+            complete: function() {
+                console.log('complete begin');
+                this.super(arguments);
+                console.log('complete end');
+            },
+        });
+    </script>
+</polymer>

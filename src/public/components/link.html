@@ -1,0 +1,16 @@
+<link rel="import" href="/vendors/polymer/polymer.html" />
+
+<polymer-element name="x-link" attributes="href text">
+    <template>
+        <a href="{{href}}" on-click="{{click}}">{{text}}</a>
+    </template>
+    <script>
+        Polymer('x-link', {
+            click: function(e) {
+                e.preventDefault();
+
+                history.pushState({},'',this.href);
+            }
+        })
+    </script>
+</polymer-element>

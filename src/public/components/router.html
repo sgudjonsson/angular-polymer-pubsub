@@ -1,0 +1,7 @@
+
+<x-router>
+    <x-state url="/" view="/views/home.html" default="true"></x-state>
+    <x-state url="/accounts" view="/views/accounts.html">
+        <x-state url=":id" view="/views/account-details.html"></x-state>
+    </x-state>
+</x-router>
