@@ -13,12 +13,6 @@ angular
     .controller('AppController', ['$scope', 'publisher', function($scope, publisher) {
         $scope.isAuthenticated = false;
         $scope.username = 'john';
-        $scope.motherfucker = {
-            foo: [
-                {asdf:1,qwerqwer:"asdfsdf"}
-            ],
-            ble: { msg: "fuuuuuuuuu" }
-        };
 
         $scope.doLogin = function(username, password) {
             $scope.$apply(function() {

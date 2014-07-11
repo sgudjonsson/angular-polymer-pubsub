@@ -37,34 +37,21 @@
                         <input type="text" name="foo" id="foo" ng-model="username" />
                     </div>
                 </div>
-                <x-login username="{{username}}" password="{{password}}" motherfucker="{{motherfucker}}"></x-login>
+                <x-login username="{{username}}" password="{{password}}"></x-login>
                 <x-link href="/api" text="Click me!"></x-link>
                 <div class="ui form segment">
                     <h3>The page says ...</h3>
                     <pre id="log"></pre>
                     <script>
 
-
-                    var self = this;
-                    var login = document.querySelector('x-login');
-                    login.addEventListener('login', function(e) {
-                        angular.element(this).scope().doLogin(e.detail.username, e.detail.password);
-
-                        var a = login.dispatchEvent(new CustomEvent("fuuu", { detail: { ble: 1 }}));
-                        console.log("fuuu returned", a);
-                    });
-
-
-                        PubSub.subscribe('user-authenticated', function(msg, data) {
-                            var log = document.querySelector("#log");
-                            log.innerHTML = log.innerHTML + "\r\nisAuthenticated = "+ data.isAuthenticated;
+                        Publisher.subscribe('user-authenticated', function(msg, data) {
+                            if(window.isAuthenticated != data.isAuthenticated) {
+                                window.isAuthenticated = data.isAuthenticated;
+                                
+                                var log = document.querySelector("#log");
+                                log.innerHTML = log.innerHTML + "\r\nisAuthenticated = "+ data.isAuthenticated;
+                            }
                         });
-
-                        function BindToElement(o) {
-                            console.log(angular.element(document.querySelector("body")).scope());
-                            var login = document.querySelector('x-login');
-                            login.motherfucker = o;
-                        }
 
                     </script>
                 </div>

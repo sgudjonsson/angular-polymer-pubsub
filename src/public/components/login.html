@@ -1,7 +1,7 @@
 <link rel="import" href="/vendors/polymer/polymer.html">
 <link rel="import" href="authentication.html">
 
-<polymer-element name="x-login" attributes="username password motherfucker">
+<polymer-element name="x-login" attributes="username password">
     <template>
         <link rel="stylesheet" href="/vendors/semantic-ui/build/minified/collections/grid.min.css" />
         <link rel="stylesheet" href="/vendors/semantic-ui/build/minified/collections/form.min.css" />
@@ -44,8 +44,7 @@
                     password: {
                         value: '',
                         reflect: true
-                    },
-                    motherfucker: undefined
+                    }
                 },
                 isAuthenticated: false,
                 onLogout: function() {
