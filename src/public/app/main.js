@@ -1,24 +1,36 @@
 angular
     .module('app', [])
-    .value('PubSub', window.PubSub)
-    .service('pubsub', ['PubSub', function(PubSub) {
+    .value('Publisher', window.Publisher)
+    .service('publisher', ['Publisher', function(Publisher) {
         this.subscribe = function(topic, callback) {
-            PubSub.subscribe(topic, callback)
+            Publisher.subscribe(topic, callback)
         };
 
         this.publish = function(topic, data) {
-            PubSub.publish(topic, data);
+            Publisher.publish(topic, data);
         }
     }])
-    .controller('AppController', ['$scope', 'pubsub', function($scope, pubsub) {
+    .controller('AppController', ['$scope', 'publisher', function($scope, publisher) {
         $scope.isAuthenticated = false;
         $scope.username = 'john';
+        $scope.motherfucker = {
+            foo: [
+                {asdf:1,qwerqwer:"asdfsdf"}
+            ],
+            ble: { msg: "fuuuuuuuuu" }
+        };
 
-        $scope.toggleAuthenticated = function() {
-            pubsub.publish('user-authenticated', { isAuthenticated: !$scope.isAuthenticated });
+        $scope.doLogin = function(username, password) {
+            $scope.$apply(function() {
+                $scope.username = username;
+            });
         }
 
-        pubsub.subscribe('user-authenticated', function(msg, data) {
+        $scope.toggleAuthenticated = function() {
+            publisher.publish('user-authenticated', { isAuthenticated: !$scope.isAuthenticated });
+        }
+
+        publisher.subscribe('user-authenticated', function(msg, data) {
             $scope.$apply(function() {
                 $scope.isAuthenticated = data.isAuthenticated;
             })

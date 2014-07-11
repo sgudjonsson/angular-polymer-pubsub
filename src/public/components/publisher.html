@@ -1,0 +1,51 @@
+<link rel="import" href="/vendors/polymer/polymer.html" />
+
+<polymer-element name="x-publisher" attributes="topics">
+    <script>
+        (function() {
+
+            // We assume that the Publisher object is available globally
+            if(!window.Publisher)
+                throw "We need the Publisher object to run"
+
+            Polymer('x-publisher', {
+                _tokens: [],
+                topics: [],
+                broadcast: function(topic, data) {
+                    window.Publisher.publish(topic, data);
+                },
+                topicsChanged: function(oldValue, newValue) {
+
+                    if(typeof oldValue === 'string')
+                        oldValue = [oldValue];
+                    if(typeof newValue === 'string')
+                        newValue = [newValue];
+
+                    var diff = _.difference(oldValue, newValue);
+
+                    console.log(oldValue, newValue, diff);
+
+                    var self = this;
+
+                    // unsubscribe the old topics
+                    diff.forEach(function(token) {
+                        window.Publisher.unsubscribe(token);
+                    });
+
+                    // subscribe to the new ones
+                    if(typeof this.topics === 'string')
+                        this.topics = [this.topics];
+
+                    // subscribe to each topic
+                    this.topics.forEach(function(topic) {
+                        var token = window.Publisher.subscribe(topic, function(msg, data) {
+                                        self.fire('topic', { topic: msg, data: data });
+                                    });
+
+                        self._tokens.push(token);
+                    });
+                }
+            });
+        })();
+    </script>
+</polymer-element>

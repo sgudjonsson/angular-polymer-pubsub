@@ -1,12 +1,12 @@
 <link rel="import" href="/vendors/polymer/polymer.html">
 <link rel="import" href="ajax.html">
-<link rel="import" href="pubsub.html">
+<link rel="import" href="publisher.html">
 
 <polymer-element name="x-authentication" attributes="authenticated">
     <template>
         <x-ajax id="ajaxLogin" url="/api/login" on-core-response="{{_handleAuthentication}}" method="post" contentType="application/json" handleAs="json"></core-ajax>
         <x-ajax id="ajaxLogout" url="/api/logout" on-core-response="{{_handleAuthentication}}" method="post" contentType="application/json" handleAs="json"></core-ajax>
-        <x-pubsub id="pubsub" topics="user-authenticated" on-topic="{{_handleMessage}}"></x-pubsub>
+        <x-publisher id="publisher" topics="user-authenticated" on-topic="{{_handleMessage}}"></x-publisher>
     </template>
     <script>
         Polymer('x-authentication', {
@@ -14,6 +14,12 @@
                 authenticated: {
                     value: false,
                     reflect: true
+                }
+            },
+            authenticatedChanged: function(oldValue, newValue) {
+                if(oldValue != newValue) {
+                    var data = { isAuthenticated: newValue };
+                    this.$.publisher.broadcast('user-authenticated', data)
                 }
             },
             ready: function() {
@@ -42,8 +48,7 @@
                 //this.fire('authenticated', { isAuthenticated: e.detail.data.isAuthenticated });
             },
             _handleAuthentication: function(e) {
-                var data = { isAuthenticated: e.detail.response.isAuthenticated };
-                this.$.pubsub.publish('user-authenticated', data)
+                this.authenticated = e.detail.response.isAuthenticated;
             }
         });
     </script>
