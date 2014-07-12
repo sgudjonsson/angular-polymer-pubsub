@@ -1,5 +1,4 @@
 <link rel="import" href="/vendors/polymer/polymer.html">
-<link rel="import" href="authentication.html">
 
 <polymer-element name="x-login" attributes="username password">
     <template>
@@ -7,7 +6,6 @@
         <link rel="stylesheet" href="/vendors/semantic-ui/build/minified/collections/form.min.css" />
         <link rel="stylesheet" href="/vendors/semantic-ui/build/minified/elements/button.min.css" />
         <link rel="stylesheet" href="/vendors/semantic-ui/build/minified/elements/segment.min.css" />
-        <x-authentication id="authentication" authenticated="{{isAuthenticated}}"></x-authentication>
 
         <div class="ui fluid form segment">
 
@@ -48,12 +46,24 @@
                 },
                 isAuthenticated: false,
                 onLogout: function() {
-                    var x = this.$.authentication;
-                    x.logout();
+                    User.logout()
+                        .then(function(state) {
+                            self.isAuthenticated = state.isAuthenticated;
+                        })
+                        .catch(function(error) {
+                            // do something with the error
+                        });
                 },
                 onLogin: function() {
-                    var x = this.$.authentication;
-                    x.login(this.username, this.password);
+                    var self = this;
+
+                    User.login(self.username, self.password)
+                        .then(function(state) {
+                            self.isAuthenticated = state.isAuthenticated;
+                        })
+                        .catch(function(error) {
+                            // do something cause we didn't login ...
+                        });
                 }
             })  
         })();

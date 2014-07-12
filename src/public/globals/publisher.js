@@ -9,7 +9,6 @@ var Publisher = (function(ctx) {
 
     return {
         subscribe: function(topic, callback) {
-            console.debug("subscribing to %s", topic);
             return ps.subscribe(topic, callback);
         },
         unsubscribe: function(id) {

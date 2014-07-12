@@ -13,15 +13,16 @@
         <script src="/vendors/platform/platform.js"></script>
         <script src="/vendors/pubsub-js/src/pubsub.js"></script>
         <script src="/vendors/lodash/dist/lodash.min.js"></script>
+        <script src="/vendors/q/q.js"></script>
 
         <script src="/globals/publisher.js"></script>
+        <script src="/globals/user.js"></script>
 
         <!-- Angular app -->
         <script src="/app/main.js"></script>
 
         <!-- Polymer components -->
         <link href="/components/login.html" rel="import" />
-        <link href="/components/link.html" rel="import" />
 
     </head>
     <body ng-controller="AppController">
@@ -38,7 +39,6 @@
                     </div>
                 </div>
                 <x-login username="{{username}}" password="{{password}}"></x-login>
-                <x-link href="/api" text="Click me!"></x-link>
                 <div class="ui form segment">
                     <h3>The page says ...</h3>
                     <pre id="log"></pre>

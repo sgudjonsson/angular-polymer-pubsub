@@ -20,6 +20,7 @@
     "semantic-ui": "~0.18.0",
     "pubsub-js": "~1.4.2",
     "core-ajax": "Polymer/core-ajax#~0.3.3",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "q": "1.0.1"
   }
 }

@@ -23,12 +23,8 @@
 
                     var diff = _.difference(oldValue, newValue);
 
-                    console.log(oldValue, newValue, diff);
-
-                    var self = this;
-
                     // unsubscribe the old topics
-                    diff.forEach(function(token) {
+                    _.forEach(diff, function(token) {
                         window.Publisher.unsubscribe(token);
                     });
 
@@ -36,6 +32,7 @@
                     if(typeof this.topics === 'string')
                         this.topics = [this.topics];
 
+                    var self = this;
                     // subscribe to each topic
                     this.topics.forEach(function(topic) {
                         var token = window.Publisher.subscribe(topic, function(msg, data) {
