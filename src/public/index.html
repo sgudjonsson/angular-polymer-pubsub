@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
 
         <link href="/vendors/semantic-ui/build/packaged/css/semantic.min.css" rel="stylesheet" type="text/css" />
-        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css" />
+        <!-- <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css" /> -->
         <link href="/css/common.css" rel="stylesheet" type="text/css" />
         
         <!-- Third party libraries -->
@@ -14,7 +14,11 @@
         <script src="/vendors/pubsub-js/src/pubsub.js"></script>
         <script src="/vendors/lodash/dist/lodash.min.js"></script>
         <script src="/vendors/q/q.js"></script>
+        <script src="/vendors/qwest/qwest-0.5.5.min.js"></script>
 
+        <script src="/globals/arguments.js"></script>
+        <script src="/globals/argumentsError.js"></script>
+        <script src="/globals/eventListeners.js"></script>
         <script src="/globals/publisher.js"></script>
         <script src="/globals/user.js"></script>
 
@@ -28,33 +32,9 @@
     <body ng-controller="AppController">
         <div class="ui grid">
             <div class="column">
-                <div class="ui form segment">
-                    <h3>Angular says...
-                        <a class="ui green label" ng-show="isAuthenticated" ng-click="toggleAuthenticated()">User is authenticated</a>
-                        <a class="ui black label" ng-show="!isAuthenticated" ng-click="toggleAuthenticated()">User is not authenticated</a>
-                    </h3>
-                    <div class="field">
-                        <label for="foo">Username</label>
-                        <input type="text" name="foo" id="foo" ng-model="username" />
-                    </div>
-                </div>
-                <x-login username="{{username}}" password="{{password}}"></x-login>
-                <div class="ui form segment">
-                    <h3>The page says ...</h3>
-                    <pre id="log"></pre>
-                    <script>
-
-                        Publisher.subscribe('user-authenticated', function(msg, data) {
-                            if(window.isAuthenticated != data.isAuthenticated) {
-                                window.isAuthenticated = data.isAuthenticated;
-                                
-                                var log = document.querySelector("#log");
-                                log.innerHTML = log.innerHTML + "\r\nisAuthenticated = "+ data.isAuthenticated;
-                            }
-                        });
-
-                    </script>
-                </div>
+                <auth-status></auth-status>
+                <login-form username="john.smith" password=""></login-form>
+                <x-login username="john.doe" password=""></x-login>
             </div>
         </div>
     </body>

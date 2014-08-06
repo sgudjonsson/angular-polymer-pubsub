@@ -14,5 +14,11 @@
   "homepage": "https://github.com/sgudjonsson/angular-polymer-pubsub",
   "dependencies": {
     "express": "~4.4.5"
+  },
+  "devDependencies": {
+    "karma": "^0.12.19",
+    "karma-jasmine": "^0.1.5",
+    "karma-chrome-launcher": "^0.1.4",
+    "karma-phantomjs-launcher": "^0.1.4"
   }
 }

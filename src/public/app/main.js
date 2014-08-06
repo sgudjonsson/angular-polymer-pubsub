@@ -1,33 +1,67 @@
 angular
     .module('app', [])
-    .value('Publisher', window.Publisher)
-    .service('publisher', ['Publisher', function(Publisher) {
-        this.subscribe = function(topic, callback) {
-            Publisher.subscribe(topic, callback)
-        };
+    .value('user', window.User)
+    .directive('authStatus', function() {
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {},
+            templateUrl: '/app/templates/auth-status.html',
+            controller: ['$scope', 'user', function($scope, user) {
+                $scope.userIsLoggedIn = false;
 
-        this.publish = function(topic, data) {
-            Publisher.publish(topic, data);
+                user.onAuthenticated(function(state) {
+                    if($scope.userIsLoggedIn != state.isAuthenticated) {
+                        $scope.$apply(function() {
+                            $scope.userIsLoggedIn = state.isAuthenticated;
+                        });
+                    }
+                });
+            }],
         }
-    }])
-    .controller('AppController', ['$scope', 'publisher', function($scope, publisher) {
-        $scope.isAuthenticated = false;
-        $scope.username = 'john';
+    })
+    .directive('loginForm', function() {
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                username: '@',
+                password: '@'
+            },
+            templateUrl: '/app/templates/login-form.html',
+            controller: ['$scope', 'user', function($scope, user) {
+                $scope.isAuthenticated = false;
 
-        $scope.doLogin = function(username, password) {
-            $scope.$apply(function() {
-                $scope.username = username;
-            });
+                $scope.login = function() {
+                    user.login($scope.username, $scope.password)
+                        .then(function(state) {
+                            $scope.$apply(function() {
+                                $scope.isAuthenticated = state.isAuthenticated;
+                            });
+                        });
+                }
+
+                $scope.logout = function() {
+                    user.logout()
+                        .then(function(state) {
+                            $scope.$apply(function() {
+                                $scope.isAuthenticated = state.isAuthenticated;
+                            });
+                        });
+                }
+
+                user.onAuthenticated(function(state) {
+                    if($scope.isAuthenticated != state.isAuthenticated) {
+                        $scope.$apply(function() {
+                            $scope.isAuthenticated = state.isAuthenticated;
+                        });
+                    }
+                });
+
+            }]
         }
+    })
+    .controller('AppController', ['$scope', function($scope) {
 
-        $scope.toggleAuthenticated = function() {
-            publisher.publish('user-authenticated', { isAuthenticated: !$scope.isAuthenticated });
-        }
-
-        publisher.subscribe('user-authenticated', function(msg, data) {
-            $scope.$apply(function() {
-                $scope.isAuthenticated = data.isAuthenticated;
-            })
-        });
     }])
     ;

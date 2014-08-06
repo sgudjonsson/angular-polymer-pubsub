@@ -1,4 +1,9 @@
-var User = (function(ctx) {
+/**
+ * [description]
+ * @param  {[type]} globals
+ * @return {[type]}
+ */
+var User = (function(globals, xhr, EventListeners, Arguments, Q) {
 
     /**
      * The current user's state
@@ -10,22 +15,39 @@ var User = (function(ctx) {
         };
 
     /**
+     * OnAuthenticated event
+     * @type {EventListeners}
+     */
+    var _onAuthenticated = new EventListeners();
+
+    /**
      * Performs a login with a username and password, returns a promise
      * @param  {string} username The username
      * @param  {string} password The password
-     * @return {Promise}         A promise that is resolved when the user is logged in
+     * @return {Promise} A promise that is resolved when the user is logged in
      */
     function login(username, password) {
-        var deferred = Q.defer();
 
-        setTimeout(function() {
-            _state.isAuthenticated = true;
-            _state.token = '0123456789';
+        // assert the required arguments
+        Arguments.required([username, password], 'Both username and password arguments are required!');
 
-            deferred.resolve(_.clone(_state));
-        }, 0)
+        // setup our promise
+        var d = Q.defer();
 
-        return deferred.promise;
+        xhr.post('/api/login', { username: username, password: password })
+            .success(function(response) {
+                _state.isAuthenticated = response.isAuthenticated;
+                _state.token = response.token;
+
+                _onAuthenticated.trigger(_state)
+
+                d.resolve(_.clone(_state));
+            })
+            .error(function(message) {
+                d.reject(message);
+            });
+
+        return d.promise;
     }
 
     /**
@@ -33,16 +55,19 @@ var User = (function(ctx) {
      * @return {Promise} A promise that is resolve when the user has been logged out from our server
      */
     function logout() {
-        var deferred = Q.defer();
+        var d = Q.defer();
 
-        setTimeout(function() {
-            _state.isAuthenticated = false;
-            _state.token = undefined;
+        xhr.post('/api/logout', { })
+            .success(function(response) {
+                _state.isAuthenticated = false;
+                _state.token = undefined;
+ 
+                _onAuthenticated.trigger(_state)
+ 
+                d.resolve(_.clone(_state));
+            });
 
-            deferred.resolve(_.clone(_state));
-        }, 0)
-
-        return deferred.promise;
+        return d.promise;
     }
 
     return {
@@ -66,20 +91,24 @@ var User = (function(ctx) {
          * Performs a login
          * @param  {string} username Username
          * @param  {string} password Password
-         * @return {Promise}         A promise that is resolved when the user has logged in
+         * @return {Promise} A promise that is resolved when the user has logged in
          */
-        login: function(username, password) {
-            return login(username, password);
-        },
+        login: login,
 
         /**
          * Performs a logout
          * @return {Promise} A promise that is resolved when the user has logged out
          */
-        logout: function() {
-            return logout();
+        logout: logout,
+
+        /**
+         * Registers a listener for on-authenticated
+         * @param {Function} callback The listener's callback function
+         */
+        onAuthenticated: function(callback) {
+            _onAuthenticated.addListener(callback);
         }
 
     };
 
-})(this);
+})(this, qwest, EventListeners, Arguments, Q);

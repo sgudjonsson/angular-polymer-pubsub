@@ -1,9 +1,9 @@
 /**
  * Publisher is a wrapper for a topics-based publisher/subcriber js library
  */
-var Publisher = (function(ctx) {
+var Publisher = (function(globals) {
 
-    var ps = ctx.PubSub;
+    var ps = globals.PubSub;
     if(!ps)
         throw "We need PubSub.JS to work!";
 

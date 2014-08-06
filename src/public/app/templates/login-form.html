@@ -1,0 +1,18 @@
+<div class="ui form segment">
+    <h3>Angular directive</h3>
+    <p>This directives uses the User API and listens to the User.onAuthenticated event</p>
+    <div ng-show="!isAuthenticated">
+        <div class="field">
+            <label for="foo">Username</label>
+            <input type="text" name="foo" id="foo" ng-model="username" />
+        </div>
+        <div class="field">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" ng-model="password" />
+        </div>
+        <button class="ui blue submit button" ng-click="login()">Login</button>
+    </div>
+    <div ng-show="isAuthenticated">
+        <button class="ui red submit button" ng-click="logout()">Logout</button>
+    </div>
+</div>

@@ -8,10 +8,10 @@
         <link rel="stylesheet" href="/vendors/semantic-ui/build/minified/elements/segment.min.css" />
 
         <div class="ui fluid form segment">
-
+            <h3>Polymer component</h3>
+            <p>This component uses the User API and listens to the User.onAuthenticated event</p>
             <!-- Only show this if user is not authenticated -->
             <template if="{{!isAuthenticated}}">
-                <h3>Login component</h3>
                 <div class="field">
                     <label for="username">Username</label>
                     <input type="text" name="username" id="username" value="{{username}}" />
@@ -25,7 +25,6 @@
 
             <!-- Only show this if user is authenticated -->
             <template if="{{isAuthenticated}}">
-                <h3>Logout component</h3>
                 <button class="ui red submit button" on-click="{{onLogout}}">Logout</button>
             </template>
 
@@ -44,8 +43,16 @@
                         reflect: true
                     }
                 },
+                ready: function() {
+                    var self = this;
+                    User.onAuthenticated(function(state) {
+                        if(self.isAuthenticated != state.isAuthenticated)
+                            self.isAuthenticated = state.isAuthenticated;
+                    });
+                },
                 isAuthenticated: false,
                 onLogout: function() {
+                    var self = this;
                     User.logout()
                         .then(function(state) {
                             self.isAuthenticated = state.isAuthenticated;
@@ -62,7 +69,8 @@
                             self.isAuthenticated = state.isAuthenticated;
                         })
                         .catch(function(error) {
-                            // do something cause we didn't login ...
+                            // do something cause we didn't login ... the promise was rejected
+                            console.log(error);
                         });
                 }
             })  

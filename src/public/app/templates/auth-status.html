@@ -1,0 +1,5 @@
+<div ng-class="{'ui':true,'label':true,'green': userIsLoggedIn}">
+    <i ng-class="{'icon':true, 'lock': userIsLoggedIn, 'unlock': !userIsLoggedIn, 'alternate':!userIsLoggedIn}"></i>
+    <span ng-show="!userIsLoggedIn">Not authenticated</span>
+    <span ng-show="userIsLoggedIn">Authenticated</span>
+</div>
